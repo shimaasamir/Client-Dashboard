@@ -122,7 +122,7 @@ function DataTableEntry() {
                 }
             ],
             language: {
-                processing: '<div class="tbl-loader-box"><img src="/content/img/loader.gif" /> <b>Processing...</b></div>'
+                processing: '<div class="tbl-loader-box"><img src="/assets/plugins/global/images/owl.carousel/ajax-loader.gif" /> <b>Processing...</b></div>'
             },
             ajax: ajaxObj,
             initComplete: initComplete,
