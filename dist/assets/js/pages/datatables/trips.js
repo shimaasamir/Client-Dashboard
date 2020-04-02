@@ -5,7 +5,7 @@ var tripsDT = function () {
 	// Private functions
 	var token = $.cookie("access_token");
 	var user = JSON.parse($.cookie("user"))
-
+	console.log(user)
 	var _dt = new DataTableEntry(),
 		datatable, _status = 0,
 		_sId, routes, arrows, datatablePassenger;
@@ -50,25 +50,27 @@ var tripsDT = function () {
 
 		// columns definition
 
-		columns: [{
-			field: 'id',
-			title: '#',
-			sortable: false,
-			width: 20,
-			selector: {
-				class: 'kt-checkbox--solid'
-			},
-			textAlign: 'center',
-		}, {
-			field: 'workid',
-			title: 'Work ID'
-		}, {
-			field: 'name',
-			title: 'Name',
-			template: function (row, index, datatable) {
-				return row.firstName + ' ' + row.lastName;
-			},
-		}],
+		columns: [
+			{
+				field: 'id',
+				title: '#',
+				sortable: false,
+				width: 20,
+				selector: {
+					class: 'kt-checkbox--solid'
+				},
+				textAlign: 'center',
+			}, {
+				field: 'workid',
+				title: 'Work ID'
+			}, {
+				field: 'name',
+				title: 'Name',
+				template: function (row, index, datatable) {
+					return row.firstName + ' ' + row.lastName;
+				},
+			}
+		],
 	};
 
 	options.search = {

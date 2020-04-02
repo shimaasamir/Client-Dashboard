@@ -48,7 +48,7 @@ function DataTableEntry() {
                 complete: function (httpObj, textStatus) {
                     // console.log(httpObj)
                     if (httpObj.status == 401) {
-                        window.location.href = '/login.html';
+                        window.location.href = '/index.html';
                     }
                 },
                 dataFilter: function (data) {
@@ -152,7 +152,7 @@ function DataTableEntry() {
                 // console.log(httpObj)
 
                 if (httpObj.status == 401) {
-                    window.location.href = '/login.html';
+                    window.location.href = '/index.html';
                 }
             },
             dataFilter: function (data) {
