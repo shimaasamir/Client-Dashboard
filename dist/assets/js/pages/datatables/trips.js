@@ -175,7 +175,7 @@ var tripsDT = function () {
 			$('#addModal #update').show();
 			loadAllRoutes()
 			$.ajax({
-				url: "http://tatweer-api.ngrok.io/api/Trip/GetTrip/" + id,
+				url: "http://tatweer-api.ngrok.io/api/Trip/GetTripWithPassenges/" + id,
 				type: "GET",
 
 				headers: {
@@ -190,12 +190,12 @@ var tripsDT = function () {
 					$('#addModal #addNewForm input[name="tripDate"]').val(res.data.tripDate);
 					$('#addModal #addNewForm input[name="startTime"]').val(res.data.startTime);
 					$('#addModal #addNewForm input[name="id"]').val(res.data.id);
-					// var selectedPassengers = res.data.passenger
-					var selectedPassengers = [
-						{
-							id: 122
-						}
-					]
+					var selectedPassengers = res.data.passenger
+					// var selectedPassengers = [
+					// 	{
+					// 		id: 122
+					// 	}
+					// ]
 					datatablePassenger ? datatablePassenger.destroy() : null
 					let passengers;
 					$.ajax({
@@ -372,7 +372,7 @@ var tripsDT = function () {
 			loadAllRoutes()
 
 			$.ajax({
-				url: "http://tatweer-api.ngrok.io/api/Trip/GetTrip/" + id,
+				url: "http://tatweer-api.ngrok.io/api/Trip/GetTripWithPassenges/" + id,
 				type: "GET",
 
 				headers: {
@@ -387,12 +387,12 @@ var tripsDT = function () {
 					$('#addModal #addNewForm input[name="tripDate"]').val(res.data.tripDate);
 					$('#addModal #addNewForm input[name="startTime"]').val(res.data.startTime);
 					$('#addModal #addNewForm input[name="id"]').val(res.data.id);
-					// var selectedPassengers = res.data.passenger
-					var selectedPassengers = [
-						{
-							id: 122
-						}
-					]
+					var selectedPassengers = res.data.passenger
+					// var selectedPassengers = [
+					// 	{
+					// 		id: 122
+					// 	}
+					// ]
 
 					datatablePassenger ? datatablePassenger.destroy() : null
 					let passengers;
