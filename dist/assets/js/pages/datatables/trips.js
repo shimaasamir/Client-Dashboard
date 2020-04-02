@@ -63,8 +63,11 @@ var tripsDT = function () {
 			field: 'workid',
 			title: 'Work ID'
 		}, {
-			field: 'firstName',
-			title: 'Name'
+			field: 'name',
+			title: 'Name',
+			template: function (row, index, datatable) {
+				return row.firstName + ' ' + row.lastName;
+			},
 		}],
 	};
 
