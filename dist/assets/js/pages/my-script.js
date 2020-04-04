@@ -1,6 +1,6 @@
 var token = $.cookie("access_token");
 var user = JSON.parse($.cookie("user"))
-
+console.log(user)
 var arrows;
 if (KTUtil.isRTL()) {
     arrows = {

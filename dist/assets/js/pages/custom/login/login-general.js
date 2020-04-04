@@ -86,10 +86,10 @@ var KTLoginGeneral = function () {
                         },
                         data: {
                             ...formData,
-                            "grant_type": "1"
+                            "grant_type": "2"
                         },
                         success: function (res) {
-                            $.cookie("user", JSON.stringify(res));
+                            $.cookie("user", JSON.stringify(res.data));
 
                             window.location.href = "trips.html"
                             console.log(res)
