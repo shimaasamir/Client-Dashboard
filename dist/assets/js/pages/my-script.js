@@ -1,6 +1,11 @@
 var token = $.cookie("access_token");
 var user = JSON.parse($.cookie("user"))
 console.log(user)
+if (user) {
+
+    $('.kt-badge--rounded').html(user.email.charAt(0))
+    $('.kt-user-card__name').html(user.email)
+}
 var arrows;
 if (KTUtil.isRTL()) {
     arrows = {

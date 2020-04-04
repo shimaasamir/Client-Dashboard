@@ -118,7 +118,9 @@ var tripsDT = function () {
 
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
-				swal.fire("Error !", "Please try again", "error");
+				if (xhr.ErrorCode == 401) {
+					window.location.href = "index.html"
+				}
 			}
 		})
 
@@ -127,11 +129,17 @@ var tripsDT = function () {
 		var datatable;
 
 		if (datatable) datatable.destroy();
-		datatable = _dt.bindDataTable('#dataTable', [0, 1, 2],
+		datatable = _dt.bindDataTable('#dataTable', [0, 1, 2, 3, 4, 5, 6],
 			function (data, a, b, c) {
 				// console.log(a)
 
-				if (c.col == 2) {
+				if (c.col == 4) {
+					return formatDate(b.tripDate);
+				}
+				if (c.col == 5) {
+					return getTime(b.startTime);
+				}
+				if (c.col == 6) {
 					return '\
 							<a href="javascript:;" data-id="' + b.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-sm view"  title="View details">\
 									<i class="flaticon-eye">\</i>\
@@ -159,6 +167,18 @@ var tripsDT = function () {
 				"data": "routeName"
 			},
 			{
+				"data": "startName"
+			},
+			{
+				"data": "endName"
+			},
+			{
+				"data": "tripDate"
+			},
+			{
+				"data": "startTime"
+			},
+			{
 				data: 'Actions',
 				responsivePriority: -1
 			}
@@ -171,8 +191,7 @@ var tripsDT = function () {
 		$('body').on('click', 'a.edit', function (e) {
 			let id = e.currentTarget.dataset.id;
 			let viewForm = $('#addModal #addNewForm')
-				// console.log(e.currentTarget.dataset.id);
-				;
+
 
 			$(".modal-title").text("Edit Trip");
 			$('#addModal #addNewForm input').prop("disabled", false);
