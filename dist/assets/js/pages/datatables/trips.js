@@ -192,8 +192,8 @@ var tripsDT = function () {
 					$('#addModal').modal('show');
 					$('#routes').val(res.data.routeID);
 					$('#routes').trigger('change');
-					$('#addModal #addNewForm input[name="tripDate"]').val(res.data.tripDate);
-					$('#addModal #addNewForm input[name="startTime"]').val(res.data.startTime);
+					$('#addModal #addNewForm input[name="tripDate"]').val(formatDate(res.data.tripDate));
+					$('#addModal #addNewForm input[name="startTime"]').val(getTime(res.data.startTime));
 					$('#addModal #addNewForm input[name="id"]').val(res.data.id);
 					var selectedPassengers = res.data.passenger
 					// var selectedPassengers = [
@@ -389,8 +389,8 @@ var tripsDT = function () {
 					$('#addModal').modal('show');
 					$('#routes').val(res.data.routeID);
 					$('#routes').trigger('change');
-					$('#addModal #addNewForm input[name="tripDate"]').val(res.data.tripDate);
-					$('#addModal #addNewForm input[name="startTime"]').val(res.data.startTime);
+					$('#addModal #addNewForm input[name="tripDate"]').val(formatDate(res.data.tripDate));
+					$('#addModal #addNewForm input[name="startTime"]').val(getTime(res.data.startTime));
 					$('#addModal #addNewForm input[name="id"]').val(res.data.id);
 					var selectedPassengers = res.data.passenger
 					// var selectedPassengers = [

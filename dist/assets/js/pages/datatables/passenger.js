@@ -145,7 +145,7 @@ var passengersDT = function () {
 								// console.log(viewForm) 
 								$('#addModal #addNewForm input[name="firstName"]').val(res.data[0].firstName);
 								$('#addModal #addNewForm input[name="lastName"]').val(res.data[0].lastName);
-								$('#addModal #addNewForm input[name="dateOfBirth"]').val(res.data[0].dateOfBirth);
+								$('#addModal #addNewForm input[name="dateOfBirth"]').val(formatDate(res.data[0].dateOfBirth));
 								$('#addModal #addNewForm input[name="email"]').val(res.data[0].email);
 								$('#addModal #addNewForm input[name="password"]').val(res.data[0].password);
 								$('#addModal #addNewForm input[name="workid"]').val(res.data[0].workid);
@@ -312,7 +312,7 @@ var passengersDT = function () {
 								// console.log(viewForm)
 								$('#addModal #addNewForm input[name="firstName"]').val(res.data[0].firstName);
 								$('#addModal #addNewForm input[name="lastName"]').val(res.data[0].lastName);
-								$('#addModal #addNewForm input[name="dateOfBirth"]').val(res.data[0].dateOfBirth);
+								$('#addModal #addNewForm input[name="dateOfBirth"]').val(formatDate(res.data[0].dateOfBirth));
 								$('#addModal #addNewForm input[name="email"]').val(res.data[0].email);
 								$('#addModal #addNewForm input[name="password"]').val(res.data[0].password);
 								$('#addModal #addNewForm input[name="workid"]').val(res.data[0].workid);
