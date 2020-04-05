@@ -78,24 +78,33 @@ var KTLoginGeneral = function () {
                     $.cookie("access_token", response.access_token, { expires: response.expires_in });
                     var token = $.cookie("access_token");
                     console.log(response)
-                    $.ajax({
-                        url: "http://tatweer-api.ngrok.io/api/login",
-                        method: "POST",
-                        headers: {
-                            "Authorization": "Berear " + token
-                        },
-                        data: {
-                            ...formData,
-                            "grant_type": "2"
-                        },
-                        success: function (res) {
-                            $.cookie("user", JSON.stringify(res.data));
+                    if (response.access_token == null) {
+                        showErrorMsg(form, 'danger', "Please check your cridentials");
+                        btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
 
-                            window.location.href = "trips.html"
-                            console.log(res)
+                    } else {
 
-                        }
-                    })
+                        $.ajax({
+                            url: "http://tatweer-api.ngrok.io/api/login",
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded",
+                                "Authorization": "Berear " + token
+                            },
+                            data: {
+                                ...formData,
+                                "grant_type": "2"
+                            },
+                            success: function (response) {
+                                $.cookie("user", JSON.stringify(response.data));
+
+                                window.location.href = "passenger.html"
+                                console.log(response)
+
+                            },
+
+                        })
+                    }
                     // window.location.href = "trips.html"
 
                     // btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);

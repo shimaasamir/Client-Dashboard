@@ -2,7 +2,6 @@ var token = $.cookie("access_token");
 var user = JSON.parse($.cookie("user"))
 console.log(user)
 if (user) {
-
     $('.kt-badge--rounded').html(user.email.charAt(0))
     $('.kt-user-card__name').html(user.email)
 }
@@ -70,6 +69,7 @@ $('.modal').on('hidden.bs.modal', function () {
 $('#logOut').click(function (e) {
     // e.perventDefault();
     $.cookie('access_token', null);
+    $.cookie('user', null);
     console.log($.cookie("access_token"))
     window.location.href = "index.html"
 
