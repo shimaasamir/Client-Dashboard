@@ -147,6 +147,9 @@ var tripsDT = function () {
 							<a href="javascript:;" data-id="' + b.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-sm edit" title="Edit details">\
 								<i class="flaticon2-paper"></i>\
 							</a>\
+							<a href="javascript:;" data-id="' + b.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-sm editPassenger" title="Edit Passenger list">\
+								<i class="fa fa-users"></i>\
+							</a>\
 							<a href="javascript:;" data-id="' + b.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-sm delete" title="Delete">\
 								<i class="flaticon2-trash"></i>\
 							</a>\
@@ -195,8 +198,96 @@ var tripsDT = function () {
 
 			$(".modal-title").text("Edit Trip");
 			$('#addModal #addNewForm input').prop("disabled", false);
-			$('#addModal #addNew').hide();
-			$('#addModal #update').show();
+			$('#addModal #addNew,#addModal .passengersTable,#addModal #updatePassengerList').hide();
+			$('#addModal #update,#addModal form').show();
+
+
+			loadAllRoutes()
+			$.ajax({
+				url: "http://tatweer-api.ngrok.io/api/Trip/GetTripWithPassenges/" + id,
+				type: "GET",
+
+				headers: {
+					"Authorization": "Berear " + token
+				},
+				success: function (res) {
+					console.log(res)
+					// console.log(viewForm)
+					$('#addModal').modal('show');
+					$('#routes').val(res.data.routeID);
+					$('#routes').trigger('change');
+					$('#addModal #addNewForm input[name="tripDate"]').val(formatDate(res.data.tripDate));
+					$('#addModal #addNewForm input[name="startTime"]').val(getTime(res.data.startTime));
+					$('#addModal #addNewForm input[name="id"]').val(res.data.id);
+					$('#update').click(function (e) {
+						e.preventDefault();
+						var btn = $(this);
+						var form = $('#addNewForm');
+						form.validate({
+							rules: {
+								routeId: {
+									required: true
+								},
+								tripDate: {
+									required: true
+								},
+								tripTime: {
+									required: true
+								}
+							}
+						});
+
+						if (!form.valid()) {
+							return;
+						}
+
+						var formData = $('#addNewForm').extractObject();
+
+						var submitdata = {
+							...formData,
+							clientId: user.id,
+							createDate: new Date(),
+							modifyDate: new Date(),
+							modifyBy: 1
+						}
+						console.log(submitdata)
+						btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
+						form.ajaxSubmit({
+							url: "http://tatweer-api.ngrok.io/api/Trip/UpdateTrip",
+							method: "POST",
+							data: submitdata,
+							headers: {
+								"Authorization": "Berear " + token
+							},
+							success: function (response) {
+								// similate 2s delay
+								// docCookies.setItem('access_token', response.access_token);
+								btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+								console.log(response);
+								$('#addModal').modal('hide');
+								datatable.ajax.reload()
+							},
+							error: function (res) {
+								console.log(response);
+								showErrorMsg(form, 'danger', res.message);
+							}
+						});
+					});
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					swal.fire("Error !", "Please try again", "error");
+				}
+			})
+
+		});
+		$('body').on('click', 'a.editPassenger', function (e) {
+			let id = e.currentTarget.dataset.id;
+
+
+			$(".modal-title").text("Edit Trip Passengers List");
+			$('#addModal #addNewForm input').prop("disabled", true);
+			$('#addModal #addNew,#addModal #update').hide();
+			$('#addModal #updatePassengerList,#addModal .passengersTable').show();
 			loadAllRoutes()
 			$.ajax({
 				url: "http://tatweer-api.ngrok.io/api/Trip/GetTripWithPassenges/" + id,
@@ -215,11 +306,7 @@ var tripsDT = function () {
 					$('#addModal #addNewForm input[name="startTime"]').val(getTime(res.data.startTime));
 					$('#addModal #addNewForm input[name="id"]').val(res.data.id);
 					var selectedPassengers = res.data.passenger
-					// var selectedPassengers = [
-					// 	{
-					// 		id: 122
-					// 	}
-					// ]
+
 					datatablePassenger ? datatablePassenger.destroy() : null
 					let passengers;
 					$.ajax({
@@ -261,29 +348,11 @@ var tripsDT = function () {
 									});
 							})
 
-							$('#update').click(function (e) {
+							$('#updatePassengerList').click(function (e) {
 								e.preventDefault();
 								var btn = $(this);
-								var form = $('#addNewForm');
-								form.validate({
-									rules: {
-										routeId: {
-											required: true
-										},
-										tripDate: {
-											required: true
-										},
-										tripTime: {
-											required: true
-										}
-									}
-								});
 
-								if (!form.valid()) {
-									return;
-								}
 
-								var formData = $('#addNewForm').extractObject();
 								var ids = datatablePassenger.rows('.kt-datatable__row--active').
 									nodes().
 									find('.kt-checkbox--single > [type="checkbox"]').
@@ -299,17 +368,13 @@ var tripsDT = function () {
 								}
 								console.log("ids", c)
 								var submitdata = {
-									...formData,
-									clientId: user.id,
-									passenger: c,
-									createDate: new Date(),
-									modifyDate: new Date(),
-									modifyBy: 1
+									tripId: id,
+									passengerList: c,
 								}
 								console.log(submitdata)
 								btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
-								form.ajaxSubmit({
-									url: "http://tatweer-api.ngrok.io/api/Trip/UpdateTrip",
+								$.ajax({
+									url: "http://tatweer-api.ngrok.io/api/trip/passenger/update",
 									method: "POST",
 									data: submitdata,
 									headers: {
@@ -324,7 +389,7 @@ var tripsDT = function () {
 										datatable.ajax.reload()
 									},
 									error: function (res) {
-										console.log(response);
+										console.log(res);
 										showErrorMsg(form, 'danger', res.message);
 									}
 								});
@@ -392,7 +457,9 @@ var tripsDT = function () {
 			// console.log(e.currentTarget.dataset.id);
 			$(".modal-title").text("View Trip");
 			$('#addModal #addNewForm input').prop("disabled", true);
-			$('#addModal #addNew,#addModal #update').hide();
+			$('#addModal #addNew,#addModal #update,#addModal #updatePassengerList').hide();
+			$('#addModal .passengersTable,#addModal form').show();
+
 			loadAllRoutes()
 
 			$.ajax({
@@ -479,8 +546,9 @@ var tripsDT = function () {
 		$('body').on('click', '#showAddNewModal', function (e) {
 			$("#showAddNewModal .modal-title").text("Add Trip");
 			$('#addModal #addNewForm input').prop("disabled", false);
-			$('#addModal #addNew').show();
-			$('#addModal #update').hide();
+			$('#addModal #update,#addModal #updatePassengerList').hide();
+			$('#addModal .passengersTable,#addModal form,#addModal #addNew').show();
+
 			$('#addModal').modal('show');
 			loadAllRoutes()
 			// loadAllRoutes(true);
