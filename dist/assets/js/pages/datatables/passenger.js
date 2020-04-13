@@ -255,8 +255,8 @@ var passengersDT = function () {
 							clientId: user.id,
 							// picURL: picURL,
 							isActive: true,
-							createDate: new Date(),
-							modifyDate: new Date(),
+							// createDate: new Date(),
+							// modifyDate: new Date(),
 							modifyBy: 1
 						}
 

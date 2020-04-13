@@ -36,7 +36,8 @@ $('.dateOfBirth').datepicker({
     rtl: KTUtil.isRTL(),
     todayHighlight: true,
     orientation: "bottom left",
-    templates: arrows
+    templates: arrows,
+    autoclose: true,
 });
 var picURL = new KTAvatar('picURLCont');
 //start--convert form to json
@@ -83,7 +84,7 @@ function formatDate(date) {
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
 
-    return [year, month, day].join('/');
+    return [year, month, day].join('/') + ' ' + d.toLocaleTimeString();
 }
 function getTime(date) {
     var d = new Date(date)

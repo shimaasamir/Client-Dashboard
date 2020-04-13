@@ -10,13 +10,13 @@ var tripsDT = function () {
 		datatable, _status = 0,
 		_sId, routes, arrows, datatablePassenger;
 
-	$('.tripDate').datepicker({
-		rtl: KTUtil.isRTL(),
+	$('.tripDateTime').datetimepicker({
 		todayHighlight: true,
-		orientation: "bottom left",
-		templates: arrows
+		autoclose: true,
+		startDate: moment().add(user.lastUpdateTime, 'hours').format('YYYY-MM-DD hh:mm:ss')
 	});
 
+	console.log()
 	if (KTUtil.isRTL()) {
 		arrows = {
 			leftArrow: '<i class="la la-angle-right"></i>',
@@ -76,6 +76,42 @@ var tripsDT = function () {
 	options.search = {
 		input: $('#generalSearch'),
 	};
+	var getLastTimeToUpdate = function (dateObj, numHours) {
+		var copiedDate = new Date(dateObj) //cloning the date object.
+		copiedDate.setHours(copiedDate.getHours() - numHours);
+		return copiedDate;
+	}
+	function makeTimer(tripCreation, containerID) {
+		// tripCreation = moment.utc(tripCreation).local().format();
+		// console.log(tripCreation)
+		// var eventTime = moment(addHours(tripCreation, user.lastUpdateTime)).toDate().getTime() / 1000; // Timestamp - Sun, 21 Apr 2013 13:00:00 GMT
+		var startTime = moment(moment(tripCreation).add(user.lastUpdateTime, 'hours').format('YYYY-MM-DD hh:mm:ss')).toDate().getTime() / 1000; // Timestamp - Sun, 21 Apr 2013 12:30:00 GMT
+		var currentTime = moment().toDate().getTime() / 1000;
+		var interval = 1000;
+		var timer;
+		var diffTime = startTime - currentTime;
+		var duration = moment.duration(diffTime * 1000, 'milliseconds');
+		if (duration._milliseconds < 0) {
+			clearInterval(timer);
+			$("#" + containerID).text("EXPIRED");
+			$("#" + containerID).parents("tr").find(".edit,.delete,.editPassenger").hide()
+
+		} else {
+			timer = setInterval(function () {
+				duration = moment.duration(duration - interval, 'milliseconds');
+				// console.log(duration._milliseconds)
+				$("#" + containerID).text(duration.days() + ":" + duration.hours() + ":" + duration.minutes() + ":" + duration.seconds())
+				// if (duration < 0) {
+				// 	clearInterval(timer);
+				// 	$("#" + containerID).text("EXPIRED");
+				// 	// console.log($("#" + containerID).parent().parant().find(".edit"))
+				// 	$("#" + containerID).parent().parant().find(".edit").hide()
+				// }
+			}, interval);
+		}
+
+	}
+
 	//start--convert form to json
 	$.fn.extractObject = function () {
 		var accum = {};
@@ -131,13 +167,23 @@ var tripsDT = function () {
 		if (datatable) datatable.destroy();
 		datatable = _dt.bindDataTable('#dataTable', [0, 1, 2, 3, 4, 5, 6],
 			function (data, a, b, c) {
-				// console.log(a)
-
+				// console.log(b.route.routeName)
+				makeTimer(b.tripDateTime, b.id);
+				// countDown(b.tripDateTime, b.id)
+				if (c.col == 1) {
+					return b.route.routeName;
+				}
+				if (c.col == 2) {
+					return b.route.start.name;
+				}
+				if (c.col == 3) {
+					return b.route.end.name;
+				}
 				if (c.col == 4) {
-					return formatDate(b.tripDate);
+					return formatDate(b.tripDateTime);
 				}
 				if (c.col == 5) {
-					return getTime(b.startTime);
+					return '<div id="' + b.id + '"></div>'
 				}
 				if (c.col == 6) {
 					return '\
@@ -161,7 +207,8 @@ var tripsDT = function () {
 			'http://tatweer-api.ngrok.io/api/Trip/GetAllTripsPaging', 'POST', {
 			pagenumber: 1,
 			pageSize: 10,
-			clientId: user.id
+			clientId: user.id,
+			statusId: 0
 		},
 			[{
 				"data": "id"
@@ -176,10 +223,7 @@ var tripsDT = function () {
 				"data": "endName"
 			},
 			{
-				"data": "tripDate"
-			},
-			{
-				"data": "startTime"
+				"data": "tripDateTime"
 			},
 			{
 				data: 'Actions',
@@ -214,10 +258,14 @@ var tripsDT = function () {
 					console.log(res)
 					// console.log(viewForm)
 					$('#addModal').modal('show');
-					$('#routes').val(res.data.routeID);
+					$('#routes').val(res.data.route.id);
 					$('#routes').trigger('change');
-					$('#addModal #addNewForm input[name="tripDate"]').val(formatDate(res.data.tripDate));
-					$('#addModal #addNewForm input[name="startTime"]').val(getTime(res.data.startTime));
+
+					// $('#addModal #addNewForm input[name="tripDateTime"]').datetimepicker({
+					// 	date: new Date(moment(res.data.tripDateTime).toDate().getTime() / 1000)
+					// });
+					$('#addModal #addNewForm input[name="tripDateTime"]').val(formatDate(res.data.tripDateTime));
+					// $('#addModal #addNewForm input[name="startTime"]').val(getTime(res.data.startTime));
 					$('#addModal #addNewForm input[name="id"]').val(res.data.id);
 					$('#update').click(function (e) {
 						e.preventDefault();
@@ -228,7 +276,7 @@ var tripsDT = function () {
 								routeId: {
 									required: true
 								},
-								tripDate: {
+								tripDateTime: {
 									required: true
 								},
 								tripTime: {
@@ -245,10 +293,8 @@ var tripsDT = function () {
 
 						var submitdata = {
 							...formData,
-							clientId: user.id,
-							createDate: new Date(),
-							modifyDate: new Date(),
-							modifyBy: 1
+							tripDateTime: formData.tripDateTime.toISOString(),
+							clientId: user.id
 						}
 						console.log(submitdata)
 						btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
@@ -300,10 +346,13 @@ var tripsDT = function () {
 					console.log(res)
 					// console.log(viewForm)
 					$('#addModal').modal('show');
-					$('#routes').val(res.data.routeID);
+					$('#routes').val(res.data.route.id);
 					$('#routes').trigger('change');
-					$('#addModal #addNewForm input[name="tripDate"]').val(formatDate(res.data.tripDate));
-					$('#addModal #addNewForm input[name="startTime"]').val(getTime(res.data.startTime));
+					// $('#addModal #addNewForm input[name="tripDateTime"]').datetimepicker({
+					// 	date: new Date(moment(res.data.tripDateTime).toDate().getTime() / 1000)
+					// });
+					$('#addModal #addNewForm input[name="tripDateTime"]').val(formatDate(res.data.tripDateTime));
+					// $('#addModal #addNewForm input[name="startTime"]').val(getTime(res.data.startTime));
 					$('#addModal #addNewForm input[name="id"]').val(res.data.id);
 					var selectedPassengers = res.data.passenger
 
@@ -432,7 +481,7 @@ var tripsDT = function () {
 						type: "POST",
 						data: {
 							ID: id,
-							statusId: 4
+							statusId: 5
 						},
 						headers: {
 							"Authorization": "Berear " + token
@@ -473,10 +522,10 @@ var tripsDT = function () {
 
 					console.log(res)
 					$('#addModal').modal('show');
-					$('#routes').val(res.data.routeID);
+					$('#routes').val(res.data.route.id);
 					$('#routes').trigger('change');
-					$('#addModal #addNewForm input[name="tripDate"]').val(formatDate(res.data.tripDate));
-					$('#addModal #addNewForm input[name="startTime"]').val(getTime(res.data.startTime));
+					$('#addModal #addNewForm input[name="tripDateTime"]').val(formatDate(res.data.tripDateTime));
+					// $('#addModal #addNewForm input[name="startTime"]').val(getTime(res.data.startTime));
 					$('#addModal #addNewForm input[name="id"]').val(res.data.id);
 					var selectedPassengers = res.data.passenger
 					// var selectedPassengers = [
@@ -589,7 +638,7 @@ var tripsDT = function () {
 								routeId: {
 									required: true
 								},
-								tripDate: {
+								tripDateTime: {
 									required: true
 								},
 								tripTime: {
@@ -626,10 +675,11 @@ var tripsDT = function () {
 						console.log("ids", ids)
 						var submitdata = {
 							...formData,
+							tripDateTime: new Date(formData.tripDateTime).toISOString(),
 							clientId: user.id,
 							passenger: c,
-							createDate: new Date(),
-							modifyDate: new Date(),
+							creationDate: new Date().toISOString(),
+							modifyDate: new Date().toISOString(),
 							modifyBy: 1
 						}
 						console.log(submitdata)
