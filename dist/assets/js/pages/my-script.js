@@ -65,7 +65,9 @@ $('.timepicker').timepicker({
 
 $('.modal').on('hidden.bs.modal', function () {
     $('#addNewForm').validate().destroy();
-    console.log("object")
+    $('.modal').find('.alert').remove()
+    $('.kt-avatar__holder').css('background-image', '');
+    // console.log("object")
 })
 $('#logOut').click(function (e) {
     // e.perventDefault();
@@ -85,6 +87,17 @@ function formatDate(date) {
     if (day.length < 2) day = '0' + day;
 
     return [year, month, day].join('/') + ' ' + d.toLocaleTimeString();
+}
+function formatDateOnly(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('/');
 }
 function getTime(date) {
     var d = new Date(date)
