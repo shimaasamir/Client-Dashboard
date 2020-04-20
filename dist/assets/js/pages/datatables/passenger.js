@@ -20,6 +20,9 @@ var passengersDT = function () {
 			function (data, a, b, c) {
 
 				// console.log(a)
+				if (c.col == 3) {
+					return formatDateOnly(b.dateOfBirth);
+				}
 				if (c.col == 5) {
 					return '\
 						<a href="javascript:;" data-id="' + b.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-sm view"  title="View details">\

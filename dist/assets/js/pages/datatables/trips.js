@@ -93,20 +93,20 @@ var tripsDT = function () {
 		var duration = moment.duration(diffTime * 1000, 'milliseconds');
 		if (duration._milliseconds < 0) {
 			clearInterval(timer);
-			$("#" + containerID).text("EXPIRED");
+			$("#" + containerID).html("EXPIRED");
 			$("#" + containerID).parents("tr").find(".edit,.delete,.editPassenger").hide()
 
 		} else {
 			timer = setInterval(function () {
 				duration = moment.duration(duration - interval, 'milliseconds');
 				// console.log(duration._milliseconds)
-				$("#" + containerID).text(duration.days() + ":" + duration.hours() + ":" + duration.minutes() + ":" + duration.seconds())
-				// if (duration < 0) {
-				// 	clearInterval(timer);
-				// 	$("#" + containerID).text("EXPIRED");
-				// 	// console.log($("#" + containerID).parent().parant().find(".edit"))
-				// 	$("#" + containerID).parent().parant().find(".edit").hide()
-				// }
+				$("#" + containerID).html(duration.days() + ":" + duration.hours() + ":" + duration.minutes() + ":" + duration.seconds())
+				if (duration < 0) {
+					clearInterval(timer);
+					$("#" + containerID).html("EXPIRED");
+					// console.log($("#" + containerID).parent().parant().find(".edit"))
+					$("#" + containerID).parents("tr").find(".edit,.delete,.editPassenger").hide()
+				}
 			}, interval);
 		}
 
@@ -168,7 +168,6 @@ var tripsDT = function () {
 		datatable = _dt.bindDataTable('#dataTable', [0, 1, 2, 3, 4, 5, 6],
 			function (data, a, b, c) {
 				// console.log(b.route.routeName)
-				makeTimer(b.tripDateTime, b.id);
 				// countDown(b.tripDateTime, b.id)
 				if (c.col == 1) {
 					return b.route.routeName;
@@ -201,6 +200,9 @@ var tripsDT = function () {
 							</a>\
 						';
 				}
+				makeTimer(b.tripDateTime, b.id)
+				// setTimeout(makeTimer(b.tripDateTime, b.id), 1000)
+
 
 				return data;
 			},
@@ -293,7 +295,7 @@ var tripsDT = function () {
 
 						var submitdata = {
 							...formData,
-							tripDateTime: formData.tripDateTime.toISOString(),
+							tripDateTime: new Date(formData.tripDateTime).toISOString(),
 							clientId: user.id
 						}
 						console.log(submitdata)
