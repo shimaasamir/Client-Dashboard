@@ -212,6 +212,7 @@ var tripsDT = function () {
 			clientId: user.id,
 			statusId: 0
 		},
+
 			[{
 				"data": "id"
 			},
@@ -229,7 +230,8 @@ var tripsDT = function () {
 			},
 			{
 				data: 'Actions',
-				responsivePriority: -1
+				responsivePriority: -1,
+				"width": "200px", "targets": 6
 			}
 			]);
 

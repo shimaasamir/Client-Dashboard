@@ -14,6 +14,13 @@ var passengersDT = function () {
 	var datatable;
 
 	var passengers = function () {
+
+
+		// $('body').on('click', 'picURLCont .kt-avatar__cancel', function (e) {
+
+		$('#removePicURL').click(function () {
+			$('#addModal #addNewForm input[name="picURL"]').val("");
+		});
 		if (datatable) datatable.destroy();
 
 		datatable = _dt.bindDataTable('#dataTable', [0, 1, 2, 3, 4, 5],
@@ -131,7 +138,7 @@ var passengersDT = function () {
 				let viewForm = $('#addModal #addNewForm') // console.log(e.currentTarget.dataset.id);
 				$(".modal-title").text("View Passenger");
 				$('#addModal #addNewForm input').prop("disabled", true);
-				$('#addModal #addNew,#addModal #update').hide();
+				$('#addModal #addNew,#addModal #update,.kt-avatar__upload').hide();
 
 				$.ajax({
 						url: "http://tatweer-api.ngrok.io/api/Passenger/GetPassenger/" + id,
@@ -174,10 +181,10 @@ var passengersDT = function () {
 				picURL
 				$(".modal-title").text("Add Passenger");
 				$('#addModal #addNewForm input').prop("disabled", false);
-				$('#addModal #addNew').show();
+				$('#addModal #addNew,.kt-avatar__upload').show();
 				$('#addModal #update').hide();
 				$('.kt-avatar__holder').css('background-image', '');
-
+				$('.kt-avatar').removeClass('kt-avatar--changed');
 				$('#addModal').modal('show');
 
 				let viewForm = $('#addModal #addNewForm');
@@ -298,7 +305,7 @@ var passengersDT = function () {
 				$(".modal-title").text("Edit Passenger");
 				$('#addModal #addNewForm input').prop("disabled", false);
 				$('#addModal #addNew').hide();
-				$('#addModal #update').show();
+				$('#addModal #update,.kt-avatar__upload').show();
 
 				$.ajax({
 						url: "http://tatweer-api.ngrok.io/api/Passenger/GetPassenger/" + id,
@@ -324,7 +331,11 @@ var passengersDT = function () {
 								$('#addModal #addNewForm input[name="id"]').val(res.data[0].id);
 								// swal.fire("Doneosdflsdfsodfjo!", "It was succesfully deleted!", "success");
 								// datatable.reload();
-
+								if (res.data[0].picUrl != null && res.data[0].picUrl != ' ' && res.data[0].picUrl != '') {
+									$('picURLCont.kt-avatar').addClass('kt-avatar--changed');
+								} else {
+									$('picURLCont.kt-avatar').removeClass('kt-avatar--changed');
+								}
 							}
 
 							,
