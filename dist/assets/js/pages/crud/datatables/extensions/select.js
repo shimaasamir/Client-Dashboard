@@ -1,7 +1,7 @@
 "use strict";
-var KTDatatablesExtensionsKeytable = function() {
+var KTDatatablesExtensionsKeytable = function () {
 
-	var initTable1 = function() {
+	var initTable1 = function () {
 		// begin first table
 		var table = $('#kt_table_1').DataTable({
 			responsive: true,
@@ -11,7 +11,7 @@ var KTDatatablesExtensionsKeytable = function() {
 					targets: -1,
 					title: 'Actions',
 					orderable: false,
-					render: function(data, type, full, meta) {
+					render: function (data, type, full, meta) {
 						return `
                         <span class="dropdown">
                             <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">
@@ -30,15 +30,15 @@ var KTDatatablesExtensionsKeytable = function() {
 				},
 				{
 					targets: 8,
-					render: function(data, type, full, meta) {
+					render: function (data, type, full, meta) {
 						var status = {
-							1: {'title': 'Pending', 'class': 'kt-badge--brand'},
-							2: {'title': 'Delivered', 'class': ' kt-badge--danger'},
-							3: {'title': 'Canceled', 'class': ' kt-badge--primary'},
-							4: {'title': 'Success', 'class': ' kt-badge--success'},
-							5: {'title': 'Info', 'class': ' kt-badge--info'},
-							6: {'title': 'Danger', 'class': ' kt-badge--danger'},
-							7: {'title': 'Warning', 'class': ' kt-badge--warning'},
+							1: { 'title': 'Pending', 'class': 'kt-badge--brand' },
+							2: { 'title': 'Delivered', 'class': ' kt-badge--danger' },
+							3: { 'title': 'Canceled', 'class': ' kt-badge--primary' },
+							4: { 'title': 'Success', 'class': ' kt-badge--success' },
+							5: { 'title': 'Info', 'class': ' kt-badge--info' },
+							6: { 'title': 'Danger', 'class': ' kt-badge--danger' },
+							7: { 'title': 'Warning', 'class': ' kt-badge--warning' },
 						};
 						if (typeof status[data] === 'undefined') {
 							return data;
@@ -48,11 +48,11 @@ var KTDatatablesExtensionsKeytable = function() {
 				},
 				{
 					targets: 9,
-					render: function(data, type, full, meta) {
+					render: function (data, type, full, meta) {
 						var status = {
-							1: {'title': 'Online', 'state': 'danger'},
-							2: {'title': 'Retail', 'state': 'primary'},
-							3: {'title': 'Direct', 'state': 'success'},
+							1: { 'title': 'Online', 'state': 'danger' },
+							2: { 'title': 'Retail', 'state': 'primary' },
+							3: { 'title': 'Direct', 'state': 'success' },
 						};
 						if (typeof status[data] === 'undefined') {
 							return data;
@@ -66,7 +66,7 @@ var KTDatatablesExtensionsKeytable = function() {
 
 	};
 
-	var initTable2 = function() {
+	var initTable2 = function () {
 		// begin first table
 		var table = $('#kt_table_2').DataTable({
 			responsive: true,
@@ -74,7 +74,7 @@ var KTDatatablesExtensionsKeytable = function() {
 				style: 'multi',
 				selector: 'td:first-child .kt-checkable',
 			},
-			headerCallback: function(thead, data, start, end, display) {
+			headerCallback: function (thead, data, start, end, display) {
 				thead.getElementsByTagName('th')[0].innerHTML = `
                     <label class="kt-checkbox kt-checkbox--single kt-checkbox--solid kt-checkbox--brand">
                         <input type="checkbox" value="" class="kt-group-checkable">
@@ -85,7 +85,7 @@ var KTDatatablesExtensionsKeytable = function() {
 				{
 					targets: 0,
 					orderable: false,
-					render: function(data, type, full, meta) {
+					render: function (data, type, full, meta) {
 						return `
                         <label class="kt-checkbox kt-checkbox--single kt-checkbox--solid kt-checkbox--brand">
                             <input type="checkbox" value="" class="kt-checkable">
@@ -97,7 +97,7 @@ var KTDatatablesExtensionsKeytable = function() {
 					targets: -1,
 					title: 'Actions',
 					orderable: false,
-					render: function(data, type, full, meta) {
+					render: function (data, type, full, meta) {
 						return `
                         <span class="dropdown">
                             <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">
@@ -116,15 +116,15 @@ var KTDatatablesExtensionsKeytable = function() {
 				},
 				{
 					targets: 8,
-					render: function(data, type, full, meta) {
+					render: function (data, type, full, meta) {
 						var status = {
-							1: {'title': 'Pending', 'class': 'kt-badge--brand'},
-							2: {'title': 'Delivered', 'class': ' kt-badge--danger'},
-							3: {'title': 'Canceled', 'class': ' kt-badge--primary'},
-							4: {'title': 'Success', 'class': ' kt-badge--success'},
-							5: {'title': 'Info', 'class': ' kt-badge--info'},
-							6: {'title': 'Danger', 'class': ' kt-badge--danger'},
-							7: {'title': 'Warning', 'class': ' kt-badge--warning'},
+							1: { 'title': 'Pending', 'class': 'kt-badge--brand' },
+							2: { 'title': 'Delivered', 'class': ' kt-badge--danger' },
+							3: { 'title': 'Canceled', 'class': ' kt-badge--primary' },
+							4: { 'title': 'Success', 'class': ' kt-badge--success' },
+							5: { 'title': 'Info', 'class': ' kt-badge--info' },
+							6: { 'title': 'Danger', 'class': ' kt-badge--danger' },
+							7: { 'title': 'Warning', 'class': ' kt-badge--warning' },
 						};
 						if (typeof status[data] === 'undefined') {
 							return data;
@@ -134,11 +134,11 @@ var KTDatatablesExtensionsKeytable = function() {
 				},
 				{
 					targets: 9,
-					render: function(data, type, full, meta) {
+					render: function (data, type, full, meta) {
 						var status = {
-							1: {'title': 'Online', 'state': 'danger'},
-							2: {'title': 'Retail', 'state': 'primary'},
-							3: {'title': 'Direct', 'state': 'success'},
+							1: { 'title': 'Online', 'state': 'danger' },
+							2: { 'title': 'Retail', 'state': 'primary' },
+							3: { 'title': 'Direct', 'state': 'success' },
 						};
 						if (typeof status[data] === 'undefined') {
 							return data;
@@ -150,11 +150,11 @@ var KTDatatablesExtensionsKeytable = function() {
 			],
 		});
 
-		table.on('change', '.kt-group-checkable', function() {
+		table.on('change', '.kt-group-checkable', function () {
 			var set = $(this).closest('table').find('td:first-child .kt-checkable');
 			var checked = $(this).is(':checked');
 
-			$(set).each(function() {
+			$(set).each(function () {
 				if (checked) {
 					$(this).prop('checked', true);
 					table.rows($(this).closest('tr')).select();
@@ -170,7 +170,7 @@ var KTDatatablesExtensionsKeytable = function() {
 	return {
 
 		//main function to initiate the module
-		init: function() {
+		init: function () {
 			initTable1();
 			initTable2();
 		},
@@ -179,6 +179,6 @@ var KTDatatablesExtensionsKeytable = function() {
 
 }();
 
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
 	KTDatatablesExtensionsKeytable.init();
 });

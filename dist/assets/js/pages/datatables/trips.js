@@ -384,14 +384,15 @@ var tripsDT = function () {
 							}
 							datatablePassenger = $('#local_record_selection').KTDatatable(options);
 
-
+							// datatablePassenger = $('#local_record_selection').KTDatatable(options);
+							var c = selectedPassengers;
 							datatablePassenger.on('kt-datatable--on-init', function () {
 								datatablePassenger.rows('.kt-datatable__row').
 									nodes().
 									find('.kt-checkbox--single > [type="checkbox"]').
 									map(function (i, chk) {
-										selectedPassengers.map(pass => {
-											console.log(chk, pass)
+										c.map(pass => {
+											// console.log(chk, pass)
 											if ($(chk).val() == pass.id) {
 												$(chk).prop('checked', true);
 												$(chk).parents("tr").addClass('kt-datatable__row--active')
@@ -401,24 +402,65 @@ var tripsDT = function () {
 									});
 							})
 
+
+							datatablePassenger.on('kt-datatable--on-check', function (e, obj) {
+								// console.log("event", e)
+								console.log("object", obj[0])
+								c.push({
+									id: obj[0]
+								});
+								console.log(c)
+
+							})
+							datatablePassenger.on('kt-datatable--on-uncheck', function (e, obj) {
+								// console.log("event", e)
+								console.log("object", obj)
+								for (var i = 0; i < c.length; i++)
+									if (c[i].id && c[i].id == obj[0]) {
+										c.splice(i, 1);
+										break;
+									}
+								// c.splice({
+								// 	id: obj[0]
+								// });
+								console.log(c)
+
+							})
+
+							datatablePassenger.on('kt-datatable--on-layout-updated', function () {
+								datatablePassenger.rows('.kt-datatable__row').
+									nodes().
+									find('.kt-checkbox--single > [type="checkbox"]').
+									map(function (i, chk) {
+										c.map(pass => {
+											// console.log(chk, pass)
+											if ($(chk).val() == pass.id) {
+												$(chk).prop('checked', true);
+												$(chk).parents("tr").addClass('kt-datatable__row--active')
+											}
+										})
+										// return $(chk).val();
+										console.log(c)
+									});
+							})
 							$('#updatePassengerList').click(function (e) {
 								e.preventDefault();
 								var btn = $(this);
 
 
-								var ids = datatablePassenger.rows('.kt-datatable__row--active').
-									nodes().
-									find('.kt-checkbox--single > [type="checkbox"]').
-									map(function (i, chk) {
-										return $(chk).val();
-									});
-								var c = [];
-								for (var i = 0; i < ids.length; i++) {
-									c.push({
-										id: ids[i]
-									});
+								// var ids = datatablePassenger.rows('.kt-datatable__row--active').
+								// 	nodes().
+								// 	find('.kt-checkbox--single > [type="checkbox"]').
+								// 	map(function (i, chk) {
+								// 		return $(chk).val();
+								// 	});
+								// var c = [];
+								// for (var i = 0; i < ids.length; i++) {
+								// 	c.push({
+								// 		id: ids[i]
+								// 	});
 
-								}
+								// }
 								console.log("ids", c)
 								var submitdata = {
 									tripId: id,
@@ -631,8 +673,49 @@ var tripsDT = function () {
 							source: passengers
 						}
 					}
+					var c = [];
+					var ids;
 					datatablePassenger = $('#local_record_selection').KTDatatable(options);
+					datatablePassenger.on('kt-datatable--on-check', function (e, obj) {
+						// console.log("event", e)
+						console.log("object", obj[0])
+						c.push({
+							id: obj[0]
+						});
+						// console.log(c)
 
+					})
+					datatablePassenger.on('kt-datatable--on-uncheck', function (e, obj) {
+						// console.log("event", e)
+						console.log("object", obj)
+						for (var i = 0; i < c.length; i++)
+							if (c[i].id && c[i].id == obj[0]) {
+								c.splice(i, 1);
+								break;
+							}
+						// c.splice({
+						// 	id: obj[0]
+						// });
+						// console.log(c)
+
+					})
+
+					datatablePassenger.on('kt-datatable--on-layout-updated', function () {
+						datatablePassenger.rows('.kt-datatable__row').
+							nodes().
+							find('.kt-checkbox--single > [type="checkbox"]').
+							map(function (i, chk) {
+								c.map(pass => {
+									// console.log(chk, pass)
+									if ($(chk).val() == pass.id) {
+										$(chk).prop('checked', true);
+										$(chk).parents("tr").addClass('kt-datatable__row--active')
+									}
+								})
+								// return $(chk).val();
+								// console.log(c)
+							});
+					})
 					$('#addNew').click(function (e) {
 						e.preventDefault();
 						var btn = $(this);
@@ -663,19 +746,7 @@ var tripsDT = function () {
 						// console.log(formData);
 
 
-						var ids = datatablePassenger.rows('.kt-datatable__row--active').
-							nodes().
-							find('.kt-checkbox--single > [type="checkbox"]').
-							map(function (i, chk) {
-								return $(chk).val();
-							});
-						var c = [];
-						for (var i = 0; i < ids.length; i++) {
-							c.push({
-								id: ids[i]
-							});
 
-						}
 						console.log("ids", ids)
 						var submitdata = {
 							...formData,
