@@ -157,6 +157,7 @@ var passengersDT = function () {
 								$('#addModal #addNewForm input[name="lastName"]').val(res.data[0].lastName);
 								$('#addModal #addNewForm input[name="dateOfBirth"]').val(formatDateOnly(res.data[0].dateOfBirth));
 								$('#addModal #addNewForm input[name="email"]').val(res.data[0].email);
+								$('#addModal #addNewForm input[name="mobile"]').val(res.data[0].mobile);
 								$('#addModal #addNewForm input[name="password"]').val(res.data[0].password);
 								$('#addModal #addNewForm input[name="workid"]').val(res.data[0].workid);
 								$('#addModal #addNewForm input[name="picURL"]').val(res.data[0].picUrl);
@@ -213,6 +214,11 @@ var passengersDT = function () {
 							email: {
 								required: true,
 								email: true
+							}
+
+							,
+							mobile: {
+								required: true
 							}
 
 							,
@@ -300,10 +306,9 @@ var passengersDT = function () {
 		$('body').on('click', 'a.edit', function (e) {
 				let id = e.currentTarget.dataset.id;
 				let viewForm = $('#addModal #addNewForm') // console.log(e.currentTarget.dataset.id);
-				;
-
 				$(".modal-title").text("Edit Passenger");
 				$('#addModal #addNewForm input').prop("disabled", false);
+				$('#addModal input[name="email"]').attr('disabled', true);
 				$('#addModal #addNew').hide();
 				$('#addModal #update,.kt-avatar__upload').show();
 
@@ -313,32 +318,30 @@ var passengersDT = function () {
 
 						headers: {
 							"Authorization": "Berear " + token
-						}
-
-						,
+						},
 						success: function (res) {
-								console.log(res);
-								$('#addModal').modal('show');
-								// console.log(viewForm)
-								$('#addModal #addNewForm input[name="firstName"]').val(res.data[0].firstName);
-								$('#addModal #addNewForm input[name="lastName"]').val(res.data[0].lastName);
-								$('#addModal #addNewForm input[name="dateOfBirth"]').val(formatDateOnly(res.data[0].dateOfBirth));
-								$('#addModal #addNewForm input[name="email"]').val(res.data[0].email);
-								$('#addModal #addNewForm input[name="password"]').val(res.data[0].password);
-								$('#addModal #addNewForm input[name="workid"]').val(res.data[0].workid);
-								$('.kt-avatar__holder').css('background-image', 'url(' + res.data[0].picUrl + ')');
-								$('#addModal #addNewForm input[name="picURL"]').val(res.data[0].picUrl);
-								$('#addModal #addNewForm input[name="id"]').val(res.data[0].id);
-								// swal.fire("Doneosdflsdfsodfjo!", "It was succesfully deleted!", "success");
-								// datatable.reload();
-								if (res.data[0].picUrl != null && res.data[0].picUrl != ' ' && res.data[0].picUrl != '') {
-									$('picURLCont.kt-avatar').addClass('kt-avatar--changed');
-								} else {
-									$('picURLCont.kt-avatar').removeClass('kt-avatar--changed');
-								}
-							}
+							console.log(res);
+							$('#addModal').modal('show');
+							// console.log(viewForm)
+							$('#addModal #addNewForm input[name="firstName"]').val(res.data[0].firstName);
+							$('#addModal #addNewForm input[name="lastName"]').val(res.data[0].lastName);
+							$('#addModal #addNewForm input[name="dateOfBirth"]').val(formatDateOnly(res.data[0].dateOfBirth));
+							$('#addModal #addNewForm input[name="email"]').val(res.data[0].email);
+							$('#addModal #addNewForm input[name="mobile"]').val(res.data[0].mobile);
 
-							,
+							$('#addModal #addNewForm input[name="password"]').val(res.data[0].password);
+							$('#addModal #addNewForm input[name="workid"]').val(res.data[0].workid);
+							$('.kt-avatar__holder').css('background-image', 'url(' + res.data[0].picUrl + ')');
+							$('#addModal #addNewForm input[name="picURL"]').val(res.data[0].picUrl);
+							$('#addModal #addNewForm input[name="id"]').val(res.data[0].id);
+							// swal.fire("Doneosdflsdfsodfjo!", "It was succesfully deleted!", "success");
+							// datatable.reload();
+							if (res.data[0].picUrl != null && res.data[0].picUrl != ' ' && res.data[0].picUrl != '') {
+								$('picURLCont.kt-avatar').addClass('kt-avatar--changed');
+							} else {
+								$('picURLCont.kt-avatar').removeClass('kt-avatar--changed');
+							}
+						},
 						error: function (xhr, ajaxOptions, thrownError) {
 							swal.fire("Error !", "Please try again", "error");
 						}
@@ -350,87 +353,109 @@ var passengersDT = function () {
 		);
 
 		$('#update').click(function (e) {
-				e.preventDefault();
-				var btn = $(this);
-				var form = $('#addNewForm');
+			e.preventDefault();
+			var btn = $(this);
+			var form = $('#addNewForm');
 
-
-				var formData = $('#addNewForm').extractObject();
-				// formData = {
-				// 	...formData,
-				// 	isAsset: $('#addModal #addNewForm input[name="isAsset"]:checked').length > 0,
-				// 	isActive: true,
-				// 	createDate: new Date(),
-				// 	modifyDate: new Date(),
-				// 	modifyBy: 1
-				// }
-				// console.log("formData");
-				// console.log(formData);
-				btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
-
-				form.ajaxSubmit({
-
-						url: "http://tatweer-api.ngrok.io/api/passenger/UpdatePassenger",
-						method: "POST",
-						data: {
-							...formData,
-							// isEmployee: $('#addModal #addNewForm input[name="isEmployee"]:checked').length > 0,
-							roleId: 4,
-							// picURL: picURL,
-							clientId: user.id,
-							isActive: true,
-							createDate: new Date(),
-							modifyDate: new Date(),
-							modifyBy: 1
+			form.validate({
+					rules: {
+						firstName: {
+							required: true
 						}
 
 						,
-						headers: {
-							"Authorization": "Berear " + token
+
+						mobile: {
+							required: true
 						}
 
 						,
-						success: function (response) {
-								// similate 2s delay
-								// docCookies.setItem('access_token', response.access_token);
-								btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
-								console.log(response);
-								$('#addModal').modal('hide');
-								datatable.ajax.reload()
-							}
-
-							,
-						error: function (res) {
-							console.log(response);
-							showErrorMsg(form, 'danger', res.message);
+						lastName: {
+							required: true
 						}
+
+						,
+						dateOfBirth: {
+							required: true
+						}
+
+						,
+						workid: {
+							required: true
+						}
+
+						,
+
+
+
+
+
 					}
+				}
 
-				);
+			);
+
+			if (!form.valid()) {
+				return;
 			}
+			var formData = $('#addNewForm').extractObject();
+			// formData = {
+			// 	...formData,
+			// 	isAsset: $('#addModal #addNewForm input[name="isAsset"]:checked').length > 0,
+			// 	isActive: true,
+			// 	createDate: new Date(),
+			// 	modifyDate: new Date(),
+			// 	modifyBy: 1
+			// }
+			// console.log("formData");
+			// console.log(formData);
+			btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
 
-		);
-	}
+			form.ajaxSubmit({
 
-	;
+					url: "http://tatweer-api.ngrok.io/api/passenger/UpdatePassenger",
+					method: "POST",
+					data: {
+						...formData,
+						// isEmployee: $('#addModal #addNewForm input[name="isEmployee"]:checked').length > 0,
+						roleId: 4,
+						// picURL: picURL,
+						clientId: user.id,
+						isActive: true,
+						createDate: new Date(),
+						modifyDate: new Date(),
+						modifyBy: 1
+					},
+					headers: {
+						"Authorization": "Berear " + token
+					},
+					success: function (response) {
+						// similate 2s delay
+						// docCookies.setItem('access_token', response.access_token);
+						btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+						console.log(response);
+						$('#addModal').modal('hide');
+						datatable.ajax.reload()
+					},
+					error: function (res) {
+						console.log(response);
+						showErrorMsg(form, 'danger', res.message);
+					}
+				}
 
-	return {
+			);
+		});
+	};
 
-		// public functions
+	return { // public functions
 		init: function () {
-				passengers();
-			}
-
-			,
-	}
-
-	;
-}
-
-();
+			passengers();
+		},
+	};
+}();
 
 jQuery(document).ready(function () {
 		passengersDT.init();
 	}
 
-);
+)

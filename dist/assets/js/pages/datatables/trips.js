@@ -9,7 +9,7 @@ var tripsDT = function () {
 	var _dt = new DataTableEntry(),
 		datatable, _status = 0,
 		_sId, routes, arrows, datatablePassenger;
-
+	var datatable;
 	$('.tripDateTime').datetimepicker({
 		todayHighlight: true,
 		autoclose: true,
@@ -161,9 +161,7 @@ var tripsDT = function () {
 		})
 
 	};
-	var trips = function () {
-		var datatable;
-
+	var initTable = function () {
 		if (datatable) datatable.destroy();
 		datatable = _dt.bindDataTable('#dataTable', [0, 1, 2, 3, 4, 5, 6],
 			function (data, a, b, c) {
@@ -235,10 +233,9 @@ var tripsDT = function () {
 			}
 			]);
 
-
-
-
-
+	}
+	var trips = function () {
+		initTable()
 		$('body').on('click', 'a.edit', function (e) {
 			let id = e.currentTarget.dataset.id;
 			let viewForm = $('#addModal #addNewForm')
@@ -315,7 +312,7 @@ var tripsDT = function () {
 								btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
 								console.log(response);
 								$('#addModal').modal('hide');
-								datatable.ajax.reload()
+								initTable()
 							},
 							error: function (res) {
 								console.log(response);
@@ -481,7 +478,7 @@ var tripsDT = function () {
 										btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
 										console.log(response);
 										$('#addModal').modal('hide');
-										datatable.ajax.reload()
+										initTable()
 									},
 									error: function (res) {
 										console.log(res);
@@ -535,7 +532,7 @@ var tripsDT = function () {
 						success: function (res) {
 							console.log(res)
 							swal.fire("Done!", "It was succesfully deleted!", "success");
-							datatable.ajax.reload();
+							initTable();
 
 						},
 						error: function (xhr, ajaxOptions, thrownError) {
@@ -772,7 +769,7 @@ var tripsDT = function () {
 								btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
 								console.log(response);
 								$('#addModal').modal('hide');
-								datatable.ajax.reload()
+								initTable()
 							},
 							error: function (res) {
 								console.log(res);
